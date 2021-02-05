@@ -1,72 +1,72 @@
 class Column
-    attr_accessor :id, :status, :amount_of_floors, :amount_of_elevators
-    def initialize(id, status, amount_of_floors, amount_of_elevators)
-        @id = id
+    attr_accessor :id, :status, :amountOfFloors, :amountOfElevators
+    def initialize(id, status, amountOfFloors, amountOfElevators)
+        @ID = id
         @status = status
-        @amount_of_floors = amount_of_floors
-        @amount_of_elevators = amount_of_elevators
-        @call_button_list = []
-        @elevator_list = []
+        @amountOfFloors = amountOfFloors
+        @amountOfElevators = amountOfElevators
+        @callButtonsList = []
+        @elevatorsList = []
         # On initiation the column will create it's call buttons
         button_floor = 1
         button_id = 1
-        for index in 1..@amount_of_floors
-            if button_floor < self.amount_of_floors
-                call_button = Call_Button.new(button_id, 'off', button_floor, 'up')
-                @call_button_list.push(call_button)
+        for index in 1..@amountOfFloors
+            if button_floor < self.amountOfFloors
+                callbutton = CallButton.new(button_id, 'off', button_floor, 'up')
+                @callButtonsList.push(callbutton)
                 button_id += 1
             end
             if button_floor > 1
-                call_button = Call_Button.new(button_id, 'off', button_floor, 'down')
-                @call_button_list.push(call_button)
+                callbutton = CallButton.new(button_id, 'off', button_floor, 'down')
+                @callButtonsList.push(callbutton)
                 button_id += 1
             end 
             button_floor += 1
         end
         # On initiation the column will create it's elevators
         elevator_id = 1
-        for index in 1..@amount_of_elevators
-            elevator = Elevator.new(elevator_id, 'idle', self.amount_of_floors, 1)
-            @elevator_list.push(elevator)
+        for index in 1..@amountOfElevators
+            elevator = Elevator.new(elevator_id, 'idle', self.amountOfFloors, 1)
+            @elevatorsList.push(elevator)
             elevator_id += 1
         end
     end
     # Since class attributes in ruby are private, I need to use setters and getters to be able to
     # access them from outsite of the class
-    def get_elevator_list
-        @elevator_list
+    def get_elevatorsList
+        @elevatorsList
     end
     
-    def elevator_list=(elevator_list)
-        @elevator_list = elevator_list
+    def elevatorsList=(elevatorsList)
+        @elevatorsList = elevatorsList
     end
 
     # This method will be called whenever a user requests an elevator
-    def request_elevator(requested_floor, direction)
-        elevator = find_elevator(requested_floor, direction)
-        elevator.get_floor_request_list.push(requested_floor)
+    def requestElevator(requestedFloor, direction)
+        elevator = findElevator(requestedFloor, direction)
+        elevator.get_floorRequestList.push(requestedFloor)
         elevator.move
-        elevator.open_doors
+        elevator.open_door
         return elevator
     end
     # Finding the best elevator by comparing scores is managed by this method
-    def find_elevator(requested_floor, requested_direction)
+    def findElevator(requestedFloor, requested_direction)
         elevator_info = {
             :best_elevator => nil,
             :best_score => 5,
             :reference_gap => Float::INFINITY
         }
-        @elevator_list.each do |elevator|
-            if requested_floor == elevator.current_floor and elevator.status == 'idle' and requested_direction == elevator.get_direction
-                elevator_info = check_elevator(1, elevator, elevator_info, requested_floor)
-            elsif requested_floor > elevator.current_floor and elevator.get_direction == 'up' and requested_direction == elevator.get_direction
-                elevator_info = check_elevator(2, elevator, elevator_info, requested_floor)
-            elsif requested_floor < elevator.current_floor and elevator.get_direction == 'down' and requested_direction == elevator.get_direction
-                elevator_info = check_elevator(2, elevator, elevator_info, requested_floor)
+        @elevatorsList.each do |elevator|
+            if requestedFloor == elevator.currentFloor and elevator.status == 'idle' and requested_direction == elevator.get_direction
+                elevator_info = check_elevator(1, elevator, elevator_info, requestedFloor)
+            elsif requestedFloor > elevator.currentFloor and elevator.get_direction == 'up' and requested_direction == elevator.get_direction
+                elevator_info = check_elevator(2, elevator, elevator_info, requestedFloor)
+            elsif requestedFloor < elevator.currentFloor and elevator.get_direction == 'down' and requested_direction == elevator.get_direction
+                elevator_info = check_elevator(2, elevator, elevator_info, requestedFloor)
             elsif elevator.status == 'idle'
-                elevator_info = check_elevator(3, elevator, elevator_info, requested_floor)
+                elevator_info = check_elevator(3, elevator, elevator_info, requestedFloor)
             else
-                elevator_info = check_elevator(4, elevator, elevator_info, requested_floor)
+                elevator_info = check_elevator(4, elevator, elevator_info, requestedFloor)
             end
             return elevator_info[:best_elevator]
         end
@@ -76,12 +76,12 @@ class Column
         if base_score < elevator_info[:best_score]
             elevator_info[:best_score] = base_score
             elevator_info[:best_elevator] = elevator
-            elevator_info[:reference_gap] = (elevator.current_floor - floor).abs
+            elevator_info[:reference_gap] = (elevator.currentFloor - floor).abs
         elsif elevator_info[:best_score] == base_score
-            if elevator_info[:reference_gap] > (elevator.current_floor - floor).abs
+            if elevator_info[:reference_gap] > (elevator.currentFloor - floor).abs
             elevator_info[:best_score] = base_score
             elevator_info[:best_elevator] = elevator
-            elevator_info[:reference_gap] = (elevator.current_floor - floor).abs
+            elevator_info[:reference_gap] = (elevator.currentFloor - floor).abs
             end
         end
         return elevator_info
@@ -91,31 +91,31 @@ end
 
 # Elevator
 class Elevator
-    attr_accessor :id, :status, :amount_of_floors, :current_floor
-    def initialize(id, status, amount_of_floors, current_floor)
-        @id = id
+    attr_accessor :id, :status, :amountOfFloors, :currentFloor
+    def initialize(id, status, amountOfFloors, currentFloor)
+        @ID = id
         @status = status
-        @amount_of_floors = amount_of_floors
-        @current_floor = current_floor
+        @amountOfFloors = amountOfFloors
+        @currentFloor = currentFloor
         @direction = nil
-        @doors = Door.new(id, 'closed')
-        @floor_button_list = []
-        @floor_request_list = []
+        @door = Door.new(id, 'closed')
+        @floorButtonsList = []
+        @floorRequestList = []
         # On initiation the elevator will create it's own buttons
         floor_number = 1
-        for index in 1..@amount_of_floors
-            floor_button = Floor_Request_Button.new(floor_number, 'off', floor_number)
-            @floor_button_list.push(floor_button)
+        for index in 1..@amountOfFloors
+            floor_button = FloorRequestButton.new(floor_number, 'off', floor_number)
+            @floorButtonsList.push(floor_button)
             floor_number += 1
         end
     end
     # Getters and setters for the floor request list
-    def get_floor_request_list
-        @floor_request_list
+    def get_floorRequestList
+        @floorRequestList
     end
     
-    def floor_request_list=(floor_request_list)
-        @floor_button_list = floor_request_list
+    def floorRequestList=(floorRequestList)
+        @floorRequestList = floorRequestList
     end
     # Getters and setters for the direction
     def get_direction
@@ -125,63 +125,63 @@ class Elevator
     def direction=(direction)
         @direction = direction
     end
-     # Getters and setters for the doors
-     def get_doors
-        @doors
+     # Getters and setters for the door
+     def get_door
+        @door
     end
     
-    def doors=(doors)
-        @doors = doors
+    def door=(door)
+        @door = door
     end
     # This method will push the requested floor to the request list
-    # and calls the elevator to move and open it's doors 
-    def request_floor(floor)
-        @floor_request_list.push(floor)
-        sort_floor_request_list
+    # and calls the elevator to move and open it's door 
+    def requestFloor(requestedFloor)
+        @floorRequestList.push(requestedFloor)
+        sort_floorRequestList
         move
-        open_doors
+        open_door
     end 
 
     def move()
-        while @floor_request_list.length != 0
-            destination = @floor_request_list[0]
+        while @floorRequestList.length != 0
+            destination = @floorRequestList[0]
             @status = 'moving'
-            if @current_floor < destination
+            if @currentFloor < destination
                 @direction = 'up'
-                while @current_floor < destination
-                    @current_floor += 1
+                while @currentFloor < destination
+                    @currentFloor += 1
                 end
-            elsif @current_floor > destination
+            elsif @currentFloor > destination
                 @direction = 'down'
-                while @current_floor > destination
-                    @current_floor -= 1
+                while @currentFloor > destination
+                    @currentFloor -= 1
                 end
             end
             @status = 'idle'
-            @floor_request_list.shift # Once the floor is reached it will delete the floor from the request List
+            @floorRequestList.shift # Once the floor is reached it will delete the floor from the request List
         end
     end
 
-    def sort_floor_request_list()
+    def sort_floorRequestList()
         if @direction == 'up'
-            @floor_request_list.sort # This will sort the request list ascending
+            @floorRequestList.sort # This will sort the request list ascending
         else
-            @floor_request_list.sort{|a,b| b <=> a} # This will sort the request list descending
+            @floorRequestList.sort{|a,b| b <=> a} # This will sort the request list descending
         end
     end
 
-    def open_doors()
-        @doors.status = 'open'
-        @doors.status = 'closed'
+    def open_door()
+        @door.status = 'open'
+        @door.status = 'closed'
     end
 
 end
 
 # Call Button
-class Call_Button
+class CallButton
     attr_accessor :id, :status, :floor, :direction
     def initialize(id, status, floor, direction)
-        @id = id
+        @ID = id
         @status = status
         @floor = floor
         @direction = direction
@@ -189,20 +189,20 @@ class Call_Button
 end
 
 # Floor Request Button
-class Floor_Request_Button
+class FloorRequestButton
     attr_accessor :id, :status, :floor
     def initialize(id, status, floor)
-        @id = id
+        @ID = id
         @status = status
         @floor = floor
     end
 end
 
-# Doors
+# door
 class Door
     attr_accessor :id, :status
     def initialize(id, status)
-        @id = id
+        @ID = id
         @status = status
     end
 end
@@ -211,33 +211,32 @@ end
 
 column = Column.new(1, 'online', 10, 2)
 
-def Scenario1()
-    # Setting the base variables for this scenario
-    column.get_elevator_list[0].current_floor = 2
-    column.get_elevator_list[1].current_floor = 6
-    
-    puts 'User is on floor 3 and wants to go up to floor 7'
-    elevator = column.request_elevator(3, 'up')
-    puts elevator.current_floor
-    puts 'Elevator A is sent to floor: ' + column.get_elevator_list[0].current_floor.to_s
-    puts 'User enters the elevator and presses of floor 7'
-    elevator.request_floor(7)
-    puts '...'
-    puts 'User reaches floor ' + column.get_elevator_list[0].current_floor.to_s + ' and gets out'
-end
 
-def Scenario2()
-    # Setting the base variables for this scenario
-end
+# Setting the base variables for this scenario
+column.get_elevatorsList[0].currentFloor = 2
+column.get_elevatorsList[1].currentFloor = 6
+
+puts 'User is on floor 3 and wants to go up to floor 7'
+elevator = column.requestElevator(3, 'up')
+puts elevator.currentFloor
+puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
+puts 'User enters the elevator and presses of floor 7'
+elevator.requestFloor(7)
+puts '...'
+puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
+
+
+
+
 
 
 # test_column = Column.new(1, 'online', 10, 2)
 
-# puts test_column.get_elevator_list[0].get_floor_request_list
+# puts test_column.get_elevator_list[0].get_floorRequestList
 
-# test_column.get_elevator_list[0].get_floor_request_list.push(8)
+# test_column.get_elevator_list[0].get_floorRequestList.push(8)
 
-# puts test_column.get_elevator_list[0].get_floor_request_list
+# puts test_column.get_elevator_list[0].get_floorRequestList
 
 # test_column.get_elevator_list[1].direction = 'what?'
 
