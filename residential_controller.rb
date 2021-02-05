@@ -57,11 +57,11 @@ class Column
             :reference_gap => Float::INFINITY
         }
         @elevator_list.each do |elevator|
-            if requested_floor == elevator.current_floor and elevator.status == 'idle' and requested_direction == elevator.direction
+            if requested_floor == elevator.current_floor and elevator.status == 'idle' and requested_direction == elevator.get_direction
                 elevator_info = check_elevator(1, elevator, elevator_info, requested_floor)
-            elsif requested_floor > elevator.current_floor and elevator.direction == 'up' and requested_direction == elevator.direction
+            elsif requested_floor > elevator.current_floor and elevator.get_direction == 'up' and requested_direction == elevator.get_direction
                 elevator_info = check_elevator(2, elevator, elevator_info, requested_floor)
-            elsif requested_floor < elevator.current_floor and elevator.direction == 'down' and requested_direction == elevator.direction
+            elsif requested_floor < elevator.current_floor and elevator.get_direction == 'down' and requested_direction == elevator.get_direction
                 elevator_info = check_elevator(2, elevator, elevator_info, requested_floor)
             elsif elevator.status == 'idle'
                 elevator_info = check_elevator(3, elevator, elevator_info, requested_floor)
@@ -89,7 +89,6 @@ class Column
 
 end
 
-
 # Elevator
 class Elevator
     attr_accessor :id, :status, :amount_of_floors, :current_floor
@@ -110,13 +109,29 @@ class Elevator
             floor_number += 1
         end
     end
-
+    # Getters and setters for the floor request list
     def get_floor_request_list
         @floor_request_list
     end
     
     def floor_request_list=(floor_request_list)
         @floor_button_list = floor_request_list
+    end
+    # Getters and setters for the direction
+    def get_direction
+        @direction
+    end
+    
+    def direction=(direction)
+        @direction = direction
+    end
+     # Getters and setters for the doors
+     def get_doors
+        @doors
+    end
+    
+    def doors=(doors)
+        @doors = doors
     end
     # This method will push the requested floor to the request list
     # and calls the elevator to move and open it's doors 
@@ -162,7 +177,6 @@ class Elevator
 
 end
 
-
 # Call Button
 class Call_Button
     attr_accessor :id, :status, :floor, :direction
@@ -174,7 +188,6 @@ class Call_Button
     end
 end
 
-
 # Floor Request Button
 class Floor_Request_Button
     attr_accessor :id, :status, :floor
@@ -185,7 +198,6 @@ class Floor_Request_Button
     end
 end
 
-
 # Doors
 class Door
     attr_accessor :id, :status
@@ -195,29 +207,42 @@ class Door
     end
 end
 
-
 #-------------------------------------------------------------------------// Testing //----------------------------------------------------------------
 
-# column = Column.new(1, 'online', 10, 2)
+column = Column.new(1, 'online', 10, 2)
 
-# # Setting the base variables for this scenario
-# column.get_elevator_list[0].current_floor = 2
-# column.get_elevator_list[1].current_floor = 6
+def Scenario1()
+    # Setting the base variables for this scenario
+    column.get_elevator_list[0].current_floor = 2
+    column.get_elevator_list[1].current_floor = 6
+    
+    puts 'User is on floor 3 and wants to go up to floor 7'
+    elevator = column.request_elevator(3, 'up')
+    puts elevator.current_floor
+    puts 'Elevator A is sent to floor: ' + column.get_elevator_list[0].current_floor.to_s
+    puts 'User enters the elevator and presses of floor 7'
+    elevator.request_floor(7)
+    puts '...'
+    puts 'User reaches floor ' + column.get_elevator_list[0].current_floor.to_s + ' and gets out'
+end
 
-# puts 'User is on floor 3 and wants to go up to floor 7'
-# elevator = column.request_elevator(3, 'up')
-# puts elevator.current_floor
-# puts 'Elevator A is sent to floor:' + column.get_elevator_list[0].current_floor
-# puts 'User enters the elevator and presses of floor 7'
-# elevator.request_floor(7)
-# puts '...'
-# puts 'User reaches floor' + column.get_elevator_list[0].current_floor + 'and gets out'
+def Scenario2()
+    # Setting the base variables for this scenario
+end
 
-test_column = Column.new(1, 'online', 10, 2)
 
-puts test_column.get_elevator_list[0].get_floor_request_list
+# test_column = Column.new(1, 'online', 10, 2)
 
-test_column.get_elevator_list[0].get_floor_request_list.push(8)
+# puts test_column.get_elevator_list[0].get_floor_request_list
 
-puts test_column.get_elevator_list[0].get_floor_request_list
+# test_column.get_elevator_list[0].get_floor_request_list.push(8)
+
+# puts test_column.get_elevator_list[0].get_floor_request_list
+
+# test_column.get_elevator_list[1].direction = 'what?'
+
+# puts test_column.get_elevator_list[1].get_direction
 # test_column.get_elevator_list.each{ |n| puts 'hello'}
+
+# testElevator = Elevator.new(1, 'lol', 10, 1)
+
