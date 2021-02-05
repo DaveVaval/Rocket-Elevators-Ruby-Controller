@@ -1,4 +1,3 @@
-# Column
 class Column
     attr_accessor :id, :status, :amount_of_floors, :amount_of_elevators
     def initialize(id, status, amount_of_floors, amount_of_elevators)
@@ -27,15 +26,25 @@ class Column
         # On initiation the column will create it's elevators
         elevator_id = 1
         for index in 1..@amount_of_elevators
-            elevator = Elevator.new(id, 'idle', self.amount_of_elevators, 1)
+            elevator = Elevator.new(elevator_id, 'idle', self.amount_of_floors, 1)
             @elevator_list.push(elevator)
             elevator_id += 1
         end
     end
+    # Since class attributes in ruby are private, I need to use setters and getters to be able to
+    # access them from outsite of the class
+    def get_elevator_list
+        @elevator_list
+    end
+    
+    def elevator_list=(elevator_list)
+        @elevator_list = elevator_list
+    end
+
     # This method will be called whenever a user requests an elevator
     def request_elevator(requested_floor, direction)
         elevator = find_elevator(requested_floor, direction)
-        elevator.floor_request_list.push(requested_floor)
+        elevator.get_floor_request_list.push(requested_floor)
         elevator.move
         elevator.open_doors
         return elevator
@@ -100,6 +109,14 @@ class Elevator
             @floor_button_list.push(floor_button)
             floor_number += 1
         end
+    end
+
+    def get_floor_request_list
+        @floor_request_list
+    end
+    
+    def floor_request_list=(floor_request_list)
+        @floor_button_list = floor_request_list
     end
     # This method will push the requested floor to the request list
     # and calls the elevator to move and open it's doors 
@@ -181,6 +198,26 @@ end
 
 #-------------------------------------------------------------------------// Testing //----------------------------------------------------------------
 
-# testColumn = Column.new(1, 'online', 10, 2)
+# column = Column.new(1, 'online', 10, 2)
 
-# puts testColumn.inspect
+# # Setting the base variables for this scenario
+# column.get_elevator_list[0].current_floor = 2
+# column.get_elevator_list[1].current_floor = 6
+
+# puts 'User is on floor 3 and wants to go up to floor 7'
+# elevator = column.request_elevator(3, 'up')
+# puts elevator.current_floor
+# puts 'Elevator A is sent to floor:' + column.get_elevator_list[0].current_floor
+# puts 'User enters the elevator and presses of floor 7'
+# elevator.request_floor(7)
+# puts '...'
+# puts 'User reaches floor' + column.get_elevator_list[0].current_floor + 'and gets out'
+
+test_column = Column.new(1, 'online', 10, 2)
+
+puts test_column.get_elevator_list[0].get_floor_request_list
+
+test_column.get_elevator_list[0].get_floor_request_list.push(8)
+
+puts test_column.get_elevator_list[0].get_floor_request_list
+# test_column.get_elevator_list.each{ |n| puts 'hello'}
