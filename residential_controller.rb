@@ -211,37 +211,84 @@ end
 
 column = Column.new(1, 'online', 10, 2)
 
+def Scenario1()
+    # Setting the base variables for this scenario
+    column.get_elevatorsList[0].currentFloor = 2
+    column.get_elevatorsList[1].currentFloor = 6
+
+    puts 'User is on floor 3 and wants to go up to floor 7'
+    elevator = column.requestElevator(3, 'up')
+    puts elevator.currentFloor
+    puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
+    puts 'User enters the elevator and presses of floor 7'
+    elevator.requestFloor(7)
+    puts '...'
+    puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
+end
+
 
 # Setting the base variables for this scenario
-column.get_elevatorsList[0].currentFloor = 2
-column.get_elevatorsList[1].currentFloor = 6
+column.get_elevatorsList[0].currentFloor = 10
+# column.get_elevatorsList[0].direction = 'down'
+column.get_elevatorsList[1].currentFloor = 3
+puts 'User is on floor 1 and wants to go up to floor 6'
+elevator = column.requestElevator(1, 'up')
 
-puts 'User is on floor 3 and wants to go up to floor 7'
+# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
+
+puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
+puts 'User enters the elevator and presses of floor 6'
+elevator.requestFloor(6)
+puts '...'
+puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
+puts ''
+puts '2 minutes later...'
+puts ''
+puts 'Another user is on floor 3 and wants to go up to floor 5'
 elevator = column.requestElevator(3, 'up')
-puts elevator.currentFloor
+
+# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
+
+puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
+puts 'User enters the elevator and presses of floor 5'
+elevator.requestFloor(5)
+puts '...'
+
+# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
+
+puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
+puts ''
+puts 'Some time after...'
+puts ''
+puts 'Another user is on floor 9 and wants to go up to floor 2'
+elevator = column.requestElevator(9, 'down')
 puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
-puts 'User enters the elevator and presses of floor 7'
-elevator.requestFloor(7)
+puts('User enters the elevator and presses of floor 2')
+elevator.requestFloor(2)
 puts '...'
 puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
 
 
-
-
-
-
-# test_column = Column.new(1, 'online', 10, 2)
-
-# puts test_column.get_elevator_list[0].get_floorRequestList
-
-# test_column.get_elevator_list[0].get_floorRequestList.push(8)
-
-# puts test_column.get_elevator_list[0].get_floorRequestList
-
-# test_column.get_elevator_list[1].direction = 'what?'
-
-# puts test_column.get_elevator_list[1].get_direction
-# test_column.get_elevator_list.each{ |n| puts 'hello'}
-
-# testElevator = Elevator.new(1, 'lol', 10, 1)
-
+# # Setting the base values for this Scenario
+# column.get_elevatorsList[0].currentFloor = 10
+# column.get_elevatorsList[0].direction = 'down'
+# column.get_elevatorsList[1].currentFloor = 3
+# puts 'User is on floor 3 and wants to go up to floor 2'
+# puts 'Elevator A is on floor 10 and Elevator B is currently moving from floor 3 to 6'
+# column.get_elevatorsList[1].requestFloor(6)
+# elevator = column.requestElevator(3, 'down')
+# puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
+# puts 'User enters the elevator and presses of floor 2'
+# elevator.requestFloor(2)
+# puts '...'
+# puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
+# puts ''
+# puts '5 minutes later...'
+# puts ''
+# puts 'Another user is on floor 10 and wants to go up to floor 3'
+# elevator = column.requestElevator(10, 'down')
+# puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
+# puts 'User enters the elevator and presses of floor 2' 
+# elevator.requestFloor(2)
+# puts '...'
+# puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
