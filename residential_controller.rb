@@ -50,26 +50,26 @@ class Column
         return elevator
     end
     # Finding the best elevator by comparing scores is managed by this method
-    def findElevator(requestedFloor, requested_direction)
+    def findElevator(requestedFloor, requestedDirection)
         elevator_info = {
             :best_elevator => nil,
             :best_score => 5,
             :reference_gap => Float::INFINITY
         }
         @elevatorsList.each do |elevator|
-            if requestedFloor == elevator.currentFloor and elevator.status == 'idle' and requested_direction == elevator.get_direction
+            if requestedFloor == elevator.currentFloor && elevator.status == 'idle' && requestedDirection == elevator.get_direction
                 elevator_info = check_elevator(1, elevator, elevator_info, requestedFloor)
-            elsif requestedFloor > elevator.currentFloor and elevator.get_direction == 'up' and requested_direction == elevator.get_direction
+            elsif requestedFloor > elevator.currentFloor && elevator.get_direction == 'up' && requestedDirection == elevator.get_direction
                 elevator_info = check_elevator(2, elevator, elevator_info, requestedFloor)
-            elsif requestedFloor < elevator.currentFloor and elevator.get_direction == 'down' and requested_direction == elevator.get_direction
+            elsif requestedFloor < elevator.currentFloor && elevator.get_direction == 'down' && requestedDirection == elevator.get_direction
                 elevator_info = check_elevator(2, elevator, elevator_info, requestedFloor)
             elsif elevator.status == 'idle'
                 elevator_info = check_elevator(3, elevator, elevator_info, requestedFloor)
             else
                 elevator_info = check_elevator(4, elevator, elevator_info, requestedFloor)
             end
-            return elevator_info[:best_elevator]
         end
+        return elevator_info[:best_elevator]
     end
 
     def check_elevator(base_score, elevator, elevator_info, floor)
@@ -166,7 +166,7 @@ class Elevator
         if @direction == 'up'
             @floorRequestList.sort # This will sort the request list ascending
         else
-            @floorRequestList.sort{|a,b| b <=> a} # This will sort the request list descending
+            @floorRequestList.reverse # This will sort the request list descending
         end
     end
 
@@ -226,47 +226,39 @@ def Scenario1()
     puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
 end
 
+def Scenario3()
+    # Setting the base values for this scenario
+    column.get_elevatorsList[0].currentFloor = 10
+    column.get_elevatorsList[1].currentFloor = 3
+    puts 'User is on floor 1 and wants to go up to floor 6'
+    elevator = column.requestElevator(1, 'up')
+    puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
+    puts 'User enters the elevator and presses of floor 6'
+    elevator.requestFloor(6)
+    puts '...'
+    puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
+    puts ''
+    puts '2 minutes later...'
+    puts ''
+    puts 'Another user is on floor 3 and wants to go up to floor 5'
+    elevator = column.requestElevator(3, 'up')
+    puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
+    puts 'User enters the elevator and presses of floor 5'
+    elevator.requestFloor(5)
+    puts '...'
+    puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
+    puts ''
+    puts 'Some time after...'
+    puts ''
+    puts 'Another user is on floor 9 and wants to go up to floor 2'
+    elevator = column.requestElevator(9, 'down')
+    puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
+    puts 'User enters the elevator and presses of floor 2'
+    elevator.requestFloor(2)
+    puts '...'
+    puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
+end
 
-# Setting the base variables for this scenario
-column.get_elevatorsList[0].currentFloor = 10
-# column.get_elevatorsList[0].direction = 'down'
-column.get_elevatorsList[1].currentFloor = 3
-puts 'User is on floor 1 and wants to go up to floor 6'
-elevator = column.requestElevator(1, 'up')
-
-# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
-
-puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
-puts 'User enters the elevator and presses of floor 6'
-elevator.requestFloor(6)
-puts '...'
-puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
-puts ''
-puts '2 minutes later...'
-puts ''
-puts 'Another user is on floor 3 and wants to go up to floor 5'
-elevator = column.requestElevator(3, 'up')
-
-# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
-
-puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
-puts 'User enters the elevator and presses of floor 5'
-elevator.requestFloor(5)
-puts '...'
-
-# puts 'Elevator A: ' + column.get_elevatorsList[0].currentFloor.to_s
-
-puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
-puts ''
-puts 'Some time after...'
-puts ''
-puts 'Another user is on floor 9 and wants to go up to floor 2'
-elevator = column.requestElevator(9, 'down')
-puts 'Elevator A is sent to floor: ' + column.get_elevatorsList[0].currentFloor.to_s
-puts('User enters the elevator and presses of floor 2')
-elevator.requestFloor(2)
-puts '...'
-puts 'User reaches floor ' + column.get_elevatorsList[0].currentFloor.to_s + ' and gets out'
 
 
 # # Setting the base values for this Scenario
