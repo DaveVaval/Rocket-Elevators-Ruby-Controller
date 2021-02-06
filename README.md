@@ -1,4 +1,6 @@
-## Rocket Elevators Ruby Controller
+## Rocket Elevators Ruby Controller 
+
+![alt text](https://github.com/DaveVaval/Rocket-Elevators-Ruby-Controller/blob/Main/img/R3.png)
 
 Welcome to the Ruby controller for Rocket Elevators! 
 
