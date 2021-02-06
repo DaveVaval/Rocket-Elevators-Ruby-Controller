@@ -280,8 +280,8 @@ def Scenario3()
     puts 'Another user is on floor 10 and wants to go up to floor 3'
     elevator = column.requestElevator(10, 'down')
     puts 'Elevator B is sent to floor: ' + column.get_elevatorsList[1].currentFloor.to_s
-    puts 'User enters the elevator and presses of floor 2'
-    elevator.requestFloor(2)
+    puts 'User enters the elevator and presses of floor 3'
+    elevator.requestFloor(3)
     puts '...'
     puts 'User reaches floor ' + column.get_elevatorsList[1].currentFloor.to_s + ' and gets out'
 end
